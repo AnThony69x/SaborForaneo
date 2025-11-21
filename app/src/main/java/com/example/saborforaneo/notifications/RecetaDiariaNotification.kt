@@ -36,7 +36,6 @@ object RecetaDiariaNotification {
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            // No necesitamos extras, solo que abra la app
         }
 
         val pendingIntent = PendingIntent.getActivity(
@@ -62,7 +61,6 @@ object RecetaDiariaNotification {
         try {
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
         } catch (e: SecurityException) {
-            // Permiso no concedido
         }
     }
 
@@ -100,7 +98,6 @@ object RecetaDiariaNotification {
         try {
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID + 1, notification)
         } catch (e: SecurityException) {
-            // Permiso no concedido
         }
     }
 }

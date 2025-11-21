@@ -27,7 +27,7 @@ fun PantallaSplash(
 ) {
     val contexto = LocalContext.current
     val esPrimeraVez = remember { esPrimeraVezApp(contexto) }
-    val haySesionActiva = false // Cambiar cuando tengas Firebase Auth
+    val haySesionActiva = false
 
     val escalaLogo = remember { Animatable(0f) }
     val alphaLogo = remember { Animatable(0f) }
@@ -95,7 +95,6 @@ fun PantallaSplash(
             animationSpec = tween(400)
         )
 
-        // Decidir a dónde navegar
         when {
             esPrimeraVez -> navegarAOnboarding()
             haySesionActiva -> navegarAInicio()

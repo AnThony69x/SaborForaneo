@@ -24,7 +24,6 @@ fun SeccionPermisosNotificaciones(
     val permissionState = rememberNotificationPermissionState(
         onPermissionGranted = {
             onCambiarNotificaciones(true)
-            // Mostrar notificación de prueba
             RecetaDiariaNotification.mostrarNotificacionPrueba(context)
         },
         onPermissionDenied = {
@@ -68,7 +67,6 @@ fun SeccionPermisosNotificaciones(
                 if (activado) {
                     if (permissionState.status == PermissionStatus.GRANTED) {
                         onCambiarNotificaciones(true)
-                        // Mostrar notificación inmediatamente
                         RecetaDiariaNotification.mostrarNotificacionPrueba(context)
                     } else {
                         permissionState.requestPermission()

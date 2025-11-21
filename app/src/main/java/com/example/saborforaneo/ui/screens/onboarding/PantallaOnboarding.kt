@@ -46,7 +46,6 @@ fun PantallaOnboarding(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Botón Saltar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,7 +68,6 @@ fun PantallaOnboarding(
                 }
             }
 
-            // Pager de páginas
             HorizontalPager(
                 count = paginas.size,
                 state = pagerState,
@@ -80,14 +78,12 @@ fun PantallaOnboarding(
                 OnboardingPage(pagina = paginas[pagina])
             }
 
-            // Indicadores y botones
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Indicadores de página (dots)
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -116,7 +112,6 @@ fun PantallaOnboarding(
                     }
                 }
 
-                // Botón Siguiente / Comenzar
                 Button(
                     onClick = {
                         if (esUltimaPagina) {

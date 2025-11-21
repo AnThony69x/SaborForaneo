@@ -89,7 +89,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Introducción
             SeccionTermino(
                 titulo = "1. Aceptación de los Términos",
                 contenido = """
@@ -101,7 +100,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Descripción del Servicio
             SeccionTermino(
                 titulo = "2. Descripción del Servicio",
                 contenido = """
@@ -119,7 +117,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Registro y Cuenta
             SeccionTermino(
                 titulo = "3. Registro y Cuenta de Usuario",
                 contenido = """
@@ -135,7 +132,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Uso Aceptable
             SeccionTermino(
                 titulo = "4. Uso Aceptable",
                 contenido = """
@@ -153,7 +149,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Propiedad Intelectual
             SeccionTermino(
                 titulo = "5. Propiedad Intelectual",
                 contenido = """
@@ -165,7 +160,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Contenido de Usuario
             SeccionTermino(
                 titulo = "6. Contenido Generado por el Usuario",
                 contenido = """
@@ -183,7 +177,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Limitación de Responsabilidad
             SeccionTermino(
                 titulo = "7. Limitación de Responsabilidad",
                 contenido = """
@@ -204,7 +197,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Privacidad
             SeccionTermino(
                 titulo = "8. Privacidad y Protección de Datos",
                 contenido = """
@@ -216,7 +208,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Modificaciones
             SeccionTermino(
                 titulo = "9. Modificaciones de los Términos",
                 contenido = """
@@ -228,7 +219,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Terminación
             SeccionTermino(
                 titulo = "10. Terminación",
                 contenido = """
@@ -244,7 +234,6 @@ fun PantallaTerminosCondiciones(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Ley Aplicable
             SeccionTermino(
                 titulo = "11. Ley Aplicable y Jurisdicción",
                 contenido = """
@@ -255,8 +244,6 @@ fun PantallaTerminosCondiciones(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Contacto
             SeccionTermino(
                 titulo = "12. Contacto",
                 contenido = """

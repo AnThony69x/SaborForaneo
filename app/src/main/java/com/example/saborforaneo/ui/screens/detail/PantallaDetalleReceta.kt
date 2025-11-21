@@ -415,28 +415,26 @@ fun InfoChip(
     }
 }
 
-// ✅ INGREDIENTES - ANIMACIÓN MÁS FLUIDA
+
 @Composable
 fun IngredienteItemAnimado(ingrediente: String, index: Int) {
     var marcado by remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = ingrediente) {
-        // ✅ Delay más corto (30ms en lugar de 50ms)
         delay(index * 30L)
         visible = true
     }
 
     AnimatedVisibility(
         visible = visible,
-        // ✅ Animación más rápida y suave
         enter = fadeIn(
             animationSpec = tween(
-                durationMillis = 250,  // Más rápido (era 300)
-                easing = FastOutSlowInEasing  // Curva más natural
+                durationMillis = 250,
+                easing = FastOutSlowInEasing
             )
         ) + slideInHorizontally(
-            initialOffsetX = { -it / 3 },  // Menos desplazamiento (era -it/2)
+            initialOffsetX = { -it / 3 },
             animationSpec = tween(
                 durationMillis = 250,
                 easing = FastOutSlowInEasing
@@ -483,27 +481,24 @@ fun IngredienteItemAnimado(ingrediente: String, index: Int) {
     }
 }
 
-// ✅ PASOS - ANIMACIÓN MÁS FLUIDA
 @Composable
 fun PasoItemAnimado(numero: Int, paso: String, index: Int) {
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = paso) {
-        // ✅ Delay más corto (40ms en lugar de 80ms)
         delay(index * 40L)
         visible = true
     }
 
     AnimatedVisibility(
         visible = visible,
-        // ✅ Animación más rápida y suave
         enter = fadeIn(
             animationSpec = tween(
-                durationMillis = 280,  // Más rápido (era 400)
-                easing = FastOutSlowInEasing  // Curva más natural
+                durationMillis = 280,
+                easing = FastOutSlowInEasing
             )
         ) + slideInHorizontally(
-            initialOffsetX = { it / 3 },  // Menos desplazamiento (era it/2)
+            initialOffsetX = { it / 3 },
             animationSpec = tween(
                 durationMillis = 280,
                 easing = FastOutSlowInEasing

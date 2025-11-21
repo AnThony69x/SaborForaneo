@@ -30,7 +30,6 @@ fun SeccionPreferencias(
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        // Switch de Tema Oscuro
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -77,7 +76,6 @@ fun SeccionPreferencias(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Selector de Color
         Card(
             modifier = Modifier
                 .fillMaxWidth()
