@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -29,32 +30,45 @@ import com.example.saborforaneo.util.Constantes
 fun PantallaLogin(
     navegarARegistro: () -> Unit,
     navegarAInicio: () -> Unit,
-    navegarARecuperarContrasena: () -> Unit
+    navegarARecuperarContrasena: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var mensajeError by remember { mutableStateOf("") }
-    var cargando by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
+    val uiState by viewModel.uiState.collectAsState()
+    
+    LaunchedEffect(uiState.exitoso) {
+        if (uiState.exitoso) {
+            navegarAInicio()
+        }
+    }
+    
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            mensajeError = uiState.error!!
+        }
+    }
 
     fun iniciarSesion() {
         mensajeError = ""
+        viewModel.limpiarError()
 
         when {
             email.isEmpty() || password.isEmpty() -> {
-                mensajeError = Constantes.ERROR_CAMPOS_VACIOS
+                mensajeError = "Por favor completa todos los campos"
             }
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                mensajeError = Constantes.ERROR_EMAIL_INVALIDO
+            !email.contains("@") -> {
+                mensajeError = "El correo debe contener @"
             }
-            password.length < 6 -> {
-                mensajeError = Constantes.ERROR_PASSWORD_CORTA
+            !email.substringAfter("@").contains(".") -> {
+                mensajeError = "El correo debe tener un dominio válido"
             }
             else -> {
-                cargando = true
-                navegarAInicio()
+                viewModel.iniciarSesion(email.trim(), password)
             }
         }
     }
@@ -94,7 +108,7 @@ fun PantallaLogin(
 
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { email = it.trim() },
                 label = { Text("Email") },
                 placeholder = { Text("tu@email.com") },
                 leadingIcon = {
@@ -189,9 +203,9 @@ fun PantallaLogin(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                enabled = !cargando
+                enabled = !uiState.cargando
             ) {
-                if (cargando) {
+                if (uiState.cargando) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.onPrimary

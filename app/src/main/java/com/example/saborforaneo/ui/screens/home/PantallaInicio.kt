@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -40,9 +41,11 @@ import java.util.Locale
 fun PantallaInicio(
     navegarADetalle: (String) -> Unit,
     navegarABusqueda: () -> Unit,
-    controladorNav: NavController
+    controladorNav: NavController,
+    recetasViewModel: RecetasViewModel = viewModel()
 ) {
     val contexto = LocalContext.current
+    val uiState by recetasViewModel.uiState.collectAsState()
     var recetasCargadas by remember { mutableStateOf(false) }
     var mostrarSkeletons by remember { mutableStateOf(true) }
     var ubicacionTexto by remember { mutableStateOf<String?>(null) }
@@ -111,11 +114,16 @@ fun PantallaInicio(
         }
     }
 
-    val recetas = remember(recetasCargadas) { DatosMock.recetasDestacadas }
+    val recetas = if (uiState.recetas.isNotEmpty()) {
+        uiState.recetas
+    } else {
+        remember(recetasCargadas) { DatosMock.recetasDestacadas }
+    }
+    
     val categorias = remember { DatosMock.categorias }
     var categoriaSeleccionada by remember { mutableStateOf<String?>(null) }
 
-    val recetasFiltradas = remember(categoriaSeleccionada, recetasCargadas) {
+    val recetasFiltradas = remember(categoriaSeleccionada, recetas) {
         if (categoriaSeleccionada == null) {
             recetas
         } else {

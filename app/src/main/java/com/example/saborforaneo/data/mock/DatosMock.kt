@@ -45,22 +45,24 @@ object DatosMock {
                     pasos.add(pasosArray.getString(j))
                 }
 
+                val imagenes = listOf(recetaJson.getString("imagenUrl"))
+                val tags = mutableListOf<String>()
+                if (recetaJson.getBoolean("esVegetariana")) tags.add("vegetariana")
+                if (recetaJson.getBoolean("esVegana")) tags.add("vegana")
+                
                 val receta = Receta(
                     id = recetaJson.getString("id"),
                     nombre = recetaJson.getString("nombre"),
                     descripcion = recetaJson.getString("descripcion"),
-                    imagenUrl = recetaJson.getString("imagenUrl"),
-                    tiempoPreparacion = recetaJson.getInt("tiempoPreparacion"),
-                    dificultad = Dificultad.valueOf(recetaJson.getString("dificultad")),
-                    porciones = recetaJson.getInt("porciones"),
-                    categoria = recetaJson.getString("categoria"),
-                    pais = recetaJson.getString("pais"),
                     ingredientes = ingredientes,
                     pasos = pasos,
-                    esFavorito = recetaJson.getBoolean("esFavorito"),
-                    esVegetariana = recetaJson.getBoolean("esVegetariana"),
-                    esVegana = recetaJson.getBoolean("esVegana"),
-                    precio = Precio.valueOf(recetaJson.getString("precio"))
+                    tiempoPreparacion = recetaJson.getInt("tiempoPreparacion"),
+                    porciones = recetaJson.getInt("porciones"),
+                    dificultadStr = recetaJson.getString("dificultad"),
+                    precioStr = recetaJson.getString("precio"),
+                    categoria = recetaJson.getString("categoria"),
+                    tags = tags,
+                    imagenes = imagenes
                 )
 
                 recetas.add(receta)

@@ -21,3 +21,6 @@ captures/
 # C++ / NDK
 .externalNativeBuild/
 .cxx/
+
+# En . gitignore
+local.properties

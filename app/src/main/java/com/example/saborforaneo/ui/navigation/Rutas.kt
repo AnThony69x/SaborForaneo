@@ -5,6 +5,9 @@ sealed class Rutas(val ruta: String) {
     object Onboarding : Rutas("onboarding")
     object Login : Rutas("login")
     object Registro : Rutas("registro")
+    object ConfirmacionEmail : Rutas("confirmacion_email/{email}") {
+        fun crearRuta(email: String) = "confirmacion_email/$email"
+    }
     object RecuperarContrasena : Rutas("recuperar_contrasena")
     object TerminosCondiciones : Rutas("terminos_condiciones")
     object Inicio : Rutas("inicio")

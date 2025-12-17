@@ -12,6 +12,7 @@ import com.example.saborforaneo.ui.screens.splash.PantallaSplash
 import com.example.saborforaneo.ui.screens.onboarding.PantallaOnboarding
 import com.example.saborforaneo.ui.screens.auth.PantallaLogin
 import com.example.saborforaneo.ui.screens.auth.PantallaRegistro
+import com.example.saborforaneo.ui.screens.auth.PantallaConfirmacionEmail
 import com.example.saborforaneo.ui.screens.auth.PantallaRecuperarContrasena
 import com.example.saborforaneo.ui.screens.home.PantallaInicio
 import com.example.saborforaneo.ui.screens.search.PantallaBusqueda
@@ -120,8 +121,8 @@ fun GrafoNavegacion(
                 navegarAtras = {
                     controladorNav.popBackStack()
                 },
-                navegarAInicio = {
-                    controladorNav.navigate(Rutas.Inicio.ruta) {
+                navegarAConfirmacion = { email ->
+                    controladorNav.navigate(Rutas.ConfirmacionEmail.crearRuta(email)) {
                         popUpTo(Rutas.Registro.ruta) { inclusive = true }
                     }
                 },
@@ -135,6 +136,21 @@ fun GrafoNavegacion(
             PantallaRecuperarContrasena(
                 navegarAtras = {
                     controladorNav.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = Rutas.ConfirmacionEmail.ruta,
+            arguments = listOf(navArgument("email") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            PantallaConfirmacionEmail(
+                email = email,
+                navegarALogin = {
+                    controladorNav.navigate(Rutas.Login.ruta) {
+                        popUpTo(Rutas.ConfirmacionEmail.ruta) { inclusive = true }
+                    }
                 }
             )
         }

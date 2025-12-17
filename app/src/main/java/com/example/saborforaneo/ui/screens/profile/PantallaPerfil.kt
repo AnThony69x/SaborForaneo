@@ -15,6 +15,8 @@ import com.example.saborforaneo.ui.components.BarraNavegacionInferior
 import com.example.saborforaneo.ui.screens.profile.componentes.*
 import com.example.saborforaneo.ui.screens.profile.dialogos.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import androidx.compose.runtime.rememberCoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -200,6 +202,9 @@ fun PantallaPerfil(
     // ========================================
 
     if (mostrarDialogoCerrarSesion) {
+        val authRepository = remember { com.example.saborforaneo.data.repository.AuthRepository() }
+        val alcanceDialog = rememberCoroutineScope()
+        
         AlertDialog(
             onDismissRequest = { mostrarDialogoCerrarSesion = false },
             icon = {
@@ -214,7 +219,10 @@ fun PantallaPerfil(
                 TextButton(
                     onClick = {
                         mostrarDialogoCerrarSesion = false
-                        navegarALogin()
+                        alcanceDialog.launch {
+                            authRepository.cerrarSesion()
+                            navegarALogin()
+                        }
                     }
                 ) {
                     Text("Sí, cerrar sesión")

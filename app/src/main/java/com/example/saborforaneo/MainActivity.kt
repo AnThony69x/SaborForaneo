@@ -1,6 +1,7 @@
 package com.example.saborforaneo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.saborforaneo.data.repository.AuthRepository
 import com.example.saborforaneo.permissions.rememberLocationPermissionState
 import com.example.saborforaneo.permissions.rememberNotificationPermissionState
 import com.example.saborforaneo.ui.navigation.GrafoNavegacion
@@ -19,9 +21,16 @@ import com.example.saborforaneo.ui.theme.SaborForaneoTheme
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
+    
+    private val authRepository = AuthRepository()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Verificar si hay sesión activa
+        val estaAutenticado = authRepository.estaAutenticado()
+        Log.d("MainActivity", "¿Usuario autenticado?: $estaAutenticado")
 
         // Leer el Intent para ver si viene de una notificación
         val navigateTo = intent.getStringExtra("NAVIGATE_TO")
@@ -87,12 +96,21 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val controladorNav = rememberNavController()
 
-                    // Navegar automáticamente al Home si viene de notificación
-                    LaunchedEffect(navigateTo) {
-                        if (navigateTo == "home") {
-                            delay(500) // Pequeño delay para que se inicialice la navegación
-                            controladorNav.navigate("home") {
-                                popUpTo("login") { inclusive = false }
+                    // Navegar automáticamente según el estado de autenticación
+                    LaunchedEffect(navigateTo, estaAutenticado) {
+                        when {
+                            navigateTo == "home" && estaAutenticado -> {
+                                delay(500)
+                                controladorNav.navigate("home") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            }
+                            estaAutenticado -> {
+                                // Si ya está autenticado, ir directo a home
+                                delay(500)
+                                controladorNav.navigate("home") {
+                                    popUpTo("login") { inclusive = true }
+                                }
                             }
                         }
                     }

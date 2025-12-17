@@ -13,12 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saborforaneo.util.Constantes
@@ -27,8 +29,9 @@ import com.example.saborforaneo.util.Constantes
 @Composable
 fun PantallaRegistro(
     navegarAtras: () -> Unit,
-    navegarAInicio: () -> Unit,
-    navegarATerminos: () -> Unit
+    navegarAConfirmacion: (String) -> Unit,
+    navegarATerminos: () -> Unit,
+    viewModel: RegistroViewModel = viewModel()
 ) {
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -38,33 +41,51 @@ fun PantallaRegistro(
     var confirmarPasswordVisible by remember { mutableStateOf(false) }
     var aceptaTerminos by remember { mutableStateOf(false) }
     var mensajeError by remember { mutableStateOf("") }
-    var cargando by remember { mutableStateOf(false) }
+    var mostrarDialogoConfirmacion by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
+    val uiState by viewModel.uiState.collectAsState()
+    
+    LaunchedEffect(uiState.exitoso) {
+        if (uiState.exitoso) {
+            mostrarDialogoConfirmacion = true
+            kotlinx.coroutines.delay(3000) // 3 segundos
+            navegarAConfirmacion(email)
+        }
+    }
+    
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            mensajeError = uiState.error!!
+        }
+    }
 
     fun registrarse() {
         mensajeError = ""
+        viewModel.limpiarError()
 
         when {
             nombre.isEmpty() || email.isEmpty() || password.isEmpty() || confirmarPassword.isEmpty() -> {
-                mensajeError = Constantes.ERROR_CAMPOS_VACIOS
+                mensajeError = "Por favor completa todos los campos"
             }
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                mensajeError = Constantes.ERROR_EMAIL_INVALIDO
+            !email.contains("@") -> {
+                mensajeError = "El correo debe contener @"
+            }
+            !email.substringAfter("@").contains(".") -> {
+                mensajeError = "El correo debe tener un dominio válido (ejemplo@dominio.com)"
             }
             password.length < 6 -> {
-                mensajeError = Constantes.ERROR_PASSWORD_CORTA
+                mensajeError = "La contraseña debe tener al menos 6 caracteres"
             }
             password != confirmarPassword -> {
-                mensajeError = Constantes.ERROR_PASSWORDS_NO_COINCIDEN
+                mensajeError = "Las contraseñas no coinciden"
             }
             !aceptaTerminos -> {
                 mensajeError = "Debes aceptar los términos y condiciones"
             }
             else -> {
-                cargando = true
-                navegarAInicio()
+                viewModel.registrarse(nombre, email, password)
             }
         }
     }
@@ -142,7 +163,7 @@ fun PantallaRegistro(
 
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { email = it.trim() }, 
                 label = { Text("Email") },
                 placeholder = { Text("tu@email.com") },
                 leadingIcon = {
@@ -280,9 +301,7 @@ fun PantallaRegistro(
                     text = mensajeError,
                     color = MaterialTheme.colorScheme.error,
                     fontSize = 14.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp)
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -294,9 +313,9 @@ fun PantallaRegistro(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                enabled = !cargando
+                enabled = !uiState.cargando
             ) {
-                if (cargando) {
+                if (uiState.cargando) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.onPrimary
@@ -332,5 +351,33 @@ fun PantallaRegistro(
 
             Spacer(modifier = Modifier.height(24.dp))
         }
+    }
+    
+    // Diálogo de confirmación
+    if (mostrarDialogoConfirmacion) {
+        AlertDialog(
+            onDismissRequest = { },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Email",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(48.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "¡Cuenta creada!",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "Verifica tu correo y confirma la cuenta pendiente de confirmación.",
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = { }
+        )
     }
 }
